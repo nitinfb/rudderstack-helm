@@ -1,6 +1,7 @@
 apiVersion: v2
 name: rudderstack
 description: Privacy and Security focused Segment-alternative, in Golang and React
+icon: https://raw.githubusercontent.com/rudderlabs/rudder-server/master/resources/logo.png
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -32,3 +33,10 @@ appVersion: 1.4.3
 #     import-values: # (optional)
 #       - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
 #     alias: (optional) Alias usable alias to be used for the chart. Useful when you have to add the same chart multiple times
+dependencies:
+  - name: postgresql
+    version: 7.7.2
+    repository: "file://./charts/postgresql"
+  - name: transformer
+    version: 0.1.0
+    repository: "file://./charts/transformer"

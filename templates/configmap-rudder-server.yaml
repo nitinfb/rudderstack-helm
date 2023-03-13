@@ -1,6 +1,6 @@
----
 {{- $baseConfig := .Files.Get "rudder-config.yaml" | fromYaml -}}
 {{- $mergedConfig := mustMergeOverwrite $baseConfig .Values.backend.config.overrides -}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
