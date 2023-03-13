@@ -83,6 +83,7 @@ spec:
           httpGet:
             path: /health
             port: {{ .Values.backend.service.targetPort }}
+          initialDelaySeconds: 60
         resources:
           {{- toYaml .Values.backend.resources | nindent 10 }}
         env:
@@ -103,13 +104,13 @@ spec:
           - name: DEST_TRANSFORM_URL
             value: "http://{{ include "transformer.fullname" . }}:{{ .Values.transformer.service.port}}"
           - name: COMPUTE_DB_HOST_IN_K8S
-            value: "{{ .Values.postgresql.external.enabled | ternary "false" "true" }}"
+            value: "{{ .Values.postgresql.enabled | ternary "true" "false" }}"
           - name: POSTGRES_POD_NAME
             value: "{{ .Release.Name }}-{{ .Values.postgresql.nameOverride }}"
           - name: POSTGRES_HEADLESS_SVC
             value: "{{ .Release.Name }}-{{ .Values.postgresql.nameOverride }}-headless"
           - name: JOBS_DB_HOST
-            value: "{{ .Values.postgresql.external.enabled | ternary .Values.postgresql.external.postgresqlHost "This is expected to be set by docker entrypoint script" }}"
+            value: "{{ .Values.postgresql.enabled | ternary "This is expected to be set by docker entrypoint script" .Values.postgresql.external.postgresqlHost }}"
           - name: JOBS_DB_USER
             value: "{{ .Values.postgresql.postgresqlUsername }}"
           - name: JOBS_DB_PORT
@@ -118,7 +119,7 @@ spec:
             value: "{{ .Values.postgresql.postgresqlDatabase }}"
           - name: JOBS_DB_PASSWORD
             value: "{{ .Values.postgresql.postgresqlPassword }}"
-          {{- if .Values.postgresql.external.enabled }}
+          {{- if not .Values.postgresql.enabled }}
           - name: JOBS_DB_SSL_MODE
             value: "{{ .Values.postgresql.external.postgresqlSslMode }}"
           {{- end }}
